@@ -1,3 +1,15 @@
+library(tidyverse)
+
+d1 <- read.csv("ExcelFormattedGISTEMPDataCSV.csv")
+str(d1)
+# Some months are as factors instead of int
+d1$Jul <- as.integer(d1$Jul)
+d1$Aug <- as.integer(d1$Aug)
+d1$Sep <- as.integer(d1$Sep)
+d1$Oct <- as.integer(d1$Oct)
+d1$Nov <- as.integer(d1$Nov)
+d1$Dec <- as.integer(d1$Dec)
+
 d1t <- gather(d1, key = month, value = tempdif, -Year, -(J.D:SON))
 d1t$tempdif <- d1t$tempdif/100
 
@@ -14,7 +26,7 @@ ggplot(d1b, aes(x=year, y = avg, color = avg)) + geom_line() + scale_color_gradi
 
 d1tmm <- d1t %>% group_by(Year) %>% summarize(max = max(tempdif), min = min(tempdif))
 
-ggplot(d1tmm, aes(Year)) + geom_ribbon(aes(ymin = min, ymax = max, fill = "grey"))
+ggplot(d1tmm, aes(Year)) + geom_ribbon(aes(ymin = min, ymax = max), fill = "grey")
 
     d1tg <- gather(d1tmm, key = key, value = value, -Year)
 
@@ -32,6 +44,8 @@ g
 
 #################################################################################
 
+d2 <- read.csv("ExcelFormattedGISTEMPData2CSV.csv")
+str(d2)
 d2g <- gather(d2, key = key, value = value, -Year)
 
 d2g$stripe[d2g$key == "X64N.90N"] <- "1"
